@@ -109,15 +109,18 @@ export default {
         });
     },
     renderMenuItem: function (h, menu, pIndex, index) {
+      console.log('that', this)
       return h(
         Item, {
           key: menu.path ? menu.path : "item_" + pIndex + "_" + index
         },
         [
           h(
-            "a", {
-              attrs: {
-                href: "#" + menu.path.substr(1)
+            "div", {
+              on: {
+                click: e => {
+                  this.$router.push(menu.path)
+                }
               }
             },
             [this.renderIcon(h, menu.icon), h("span", [menu.name])]
