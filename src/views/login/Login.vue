@@ -87,10 +87,9 @@ export default {
               password: values.password
             },
             onSuccess: res => {
-              this.logging = false;
               const result = res ?.data
               // 权限小于1 则直接拒绝访问
-                if (result.role <= 1) {
+              if (result.role <= 1) {
                 this.$router.push("/exception/403");
               } else {
                 // 暂存用户信息到seesionStorage
@@ -108,6 +107,9 @@ export default {
                 this.$store.commit("account/SET_USER");
                 this.$router.push("/");
               }
+            },
+            onFinally: () => {
+              this.logging = false;
             }
           })
         }

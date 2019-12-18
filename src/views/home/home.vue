@@ -1,5 +1,5 @@
 <template>
-  <page-layout id="home">
+  <page-layout id="home-page">
     <div slot="extra"
          class="extraImg">
       <img :src="setting.extraImage" />
@@ -365,13 +365,11 @@ export default {
       e.preventDefault();
       this.searchForm.isLoading = true;
       await this.getBillConfig();
-      this.getBillProductsByOrg();
       this.searchForm.isLoading = false;
     },
     // 学校改变 
     async onSchoolChange(value) {
       this.searchForm.schoolCode = value
-      await this.getBillProductsByOrg()
     },
     // 修改
     onEdit(id) {
@@ -389,9 +387,7 @@ export default {
     },
     // 修改.保存
     async saveEdit() {
-      await this.updateBillConfig()
-      this.getBillConfig();
-      this.getBillProductsByOrg();
+      this.$info({ title: '这里运行update' })
     },
     // 修改.取消
     cancelEdit() {
@@ -404,80 +400,11 @@ export default {
     },
     // 添加.保存
     async saveAdd() {
-      await this.createBillConfig()
-      this.getBillConfig();
-      this.getBillProductsByOrg();
+      this.$info({ title: '这里运行create' })
     },
     // 添加.取消
     cancelAdd() {
       this.addForm.isVisible = false;
-    },
-    // api
-    async updateBillConfig() {
-      const { editForm } = this
-      editForm.isLoading = true;
-      // 接口参数
-      let data;
-      let err;
-      // 表单数据添加到参数中
-      editForm.form.validateFields((error, values) => {
-        err = error;
-        const { blilName, status, description } = values
-        const { id } = editForm.data
-        data = {
-          id,
-          billName,
-          status,
-          description
-        }
-      })
-      // 表单校验
-      if (err) {
-        editForm.isLoading = false;
-      } else {
-        // 请求接口
-        await this.$api.updateBillConfig(data).then(res => {
-          // 成功访问, 处理数据
-          if (res.code === 1) {
-            this.$message.success("修改成功")
-          }
-        });
-        editForm.data = {};
-        editForm.isLoading = false;
-        editForm.isVisible = false;
-      }
-    },
-    // api
-    async createBillConfig() {
-      this.addForm.isLoading = true;
-      // 接口参数
-      let data;
-      let err;
-      // 表单数据添加到参数中
-      this.addForm.form.validateFields((error, values) => {
-        err = error;
-        data = {
-          orgNo: values.schoolCode,
-          billName: values.billName,
-          description: values.description,
-          productIds: [...values.productIds]
-        };
-      });
-      // 表单校验
-      if (err) {
-        this.addForm.isLoading = false;
-      } else {
-        // 请求接口
-        await this.$api.createBillConfig(data).then(res => {
-          this.addForm.billProductsList = [];
-          // 成功访问, 处理数据
-          if (res.code === 1) {
-            this.$message.success("添加成功");
-          }
-        });
-        this.addForm.isLoading = false;
-        this.addForm.isVisible = false;
-      }
     },
     // api
     async getBillConfig() {
@@ -487,50 +414,33 @@ export default {
       // 请求接口
       await this.$api
         .getBillConfigBy({
-          orgNo: this.searchForm.schoolCode,
-          status: 0
-        })
-        .then(res => {
-          // 成功访问, 处理数据
-          if (res.code === 1 && res.data) {
+          data: {
+            orgNo: this.searchForm.schoolCode,
+            status: 0
+          },
+          onSuccess: res => {
             this.table.billList = res.data;
           }
-        });
-      this.table.isLoading = false;
-    },
-    // api
-    async getBillProductsByOrg() {
-      // 加载前清空相关数据
-      this.addForm.billProductsList = [];
-
-      await this.$api
-        .getBillProductsByOrg({
-          orgNo: this.searchForm.schoolCode
         })
-        .then(res => {
-          // 成功访问, 处理数据]
-          if (res.code === 1 && res.data) {
-            this.addForm.billProductsList = res.data;
-          }
-        });
+
+      this.table.isLoading = false;
     },
     // api
     async findSchoolList() {
       this.searchForm.isSchoolLoading = true
-      await this.$api.findSchoolList().then(res => {
-        // 成功访问, 处理数据
-        if (res.code === 1 && res.data) {
+      await this.$api.findSchoolList({
+        onSuccess: res => {
+          // 成功访问, 处理数据
           this.searchForm.schoolCode = res ?.data[0] ?.schoolCode || "" 
           this.searchForm.schoolList = res.data;
         }
-      });
+      })
       this.searchForm.isSchoolLoading = false
     },
     // 初始数据
     async initData() {
       await this.findSchoolList()
       this.getBillConfig();
-      this.getBillProductsByOrg();
     }
   },
   async created() {
@@ -542,7 +452,7 @@ export default {
 </script>
 <style lang="scss">
 @import "../../assets/style/mixin.scss";
-#home {
+#home-page {
   .ant-form-item-label label {
     font-weight: 800;
     font-size: 14px;

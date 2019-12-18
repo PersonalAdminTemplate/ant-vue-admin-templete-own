@@ -35,21 +35,19 @@ export default async ({
   auth,
   baseUrl,
   headers = {},
-  code = 1,
   onSuccess = function (res) {},
   onFail = function (res) {},
+  onFinally = function (res) {},
   onGlobalSuccess = function (res) {},
   onGlobalFail = function (res) {
     message(res.message || res.msg)
   },
   // 成功条件计算方法, config: {code, res}
-  computeSuccess = function (config) {
-    return config.code === 1
+  computeSuccess = function (res) {
+    if (res.status > 299) return false
+    return 1 === res.data.code
   }
 }) => {
-  const computeConfig = {
-    code
-  }
   let _baseUrl = baseUrl || defaultBaseUrl
   // 如果有redirectUrl, 则覆盖url
   url = _baseUrl + url;
@@ -115,9 +113,8 @@ export default async ({
   }
   // 发送请求
   await axios(requestConfig).then(res => {
-    computeConfig.res = res
     // 允许实例自行计算成功条件
-    const isSuccess = computeSuccess(computeConfig)
+    const isSuccess = computeSuccess(res)
     const result = res.data
     // 成功码默认为1, 根据后台修改
     if (isSuccess) {
@@ -127,6 +124,7 @@ export default async ({
       onGlobalFail(result)
       onFail(result)
     }
+    onFinally(res)
   })
 
 };

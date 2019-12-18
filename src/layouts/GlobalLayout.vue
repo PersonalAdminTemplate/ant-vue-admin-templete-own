@@ -14,7 +14,7 @@
                 :menuData="menuData"
                 :collapsed="collapsed"
                 :collapsible="true" />
-    <a-layout>
+    <a-layout style="overflow:auto;height:100vh">
       <global-header :menuData="menuData"
                      :collapsed="collapsed"
                      @toggleCollapse="toggleCollapse" />
