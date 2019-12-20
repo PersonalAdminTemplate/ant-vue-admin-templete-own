@@ -1,39 +1,53 @@
 <template>
-  <page-layout :desc="setting.desc"
-               :title="setting.title"
-               :linkList="setting.linkList"
-               id="user-manager">
-    <div slot="extra"
-         class="extraImg">
+  <page-layout
+    :desc="setting.desc"
+    :title="setting.title"
+    :linkList="setting.linkList"
+    id="user-manager"
+  >
+    <div
+      slot="extra"
+      class="extraImg"
+    >
       <img :src="setting.extraImage" />
     </div>
     <transition name="page-toggle">
       <keep-alive>
         <a-card class="content">
           <!-- `searchForm -->
-          <a-form :form="searchForm.form"
-                  layout="inline"
-                  @submit="onSearch">
-            <a-row type="flex"
-                   align="middle">
+          <a-form
+            :form="searchForm.form"
+            layout="inline"
+            @submit="onSearch"
+          >
+            <a-row
+              type="flex"
+              align="middle"
+            >
               <a-col>
                 <a-spin :spinning="searchForm.isSchoolLoading">
-                  <a-form-item style="width:100%"
-                               label="学校">
-                    <a-select v-decorator="[
+                  <a-form-item
+                    style="width:100%"
+                    label="学校"
+                  >
+                    <a-select
+                      v-decorator="[
                               'schoolCode',
                               {
                                 initialValue: searchForm.schoolCode,
                                 rules: [{ required: true }]
                               }
                             ]"
-                              placeholder="请选择学校"
-                              @change='onSchoolChange'
-                              showArrow>
-                      <a-select-option v-for="(item, index) in searchForm.schoolList"
-                                       :key="index"
-                                       :title="item.schoolName"
-                                       :value="item.schoolCode">
+                      placeholder="请选择学校"
+                      @change='onSchoolChange'
+                      showArrow
+                    >
+                      <a-select-option
+                        v-for="(item, index) in searchForm.schoolList"
+                        :key="index"
+                        :title="item.schoolName"
+                        :value="item.schoolCode"
+                      >
                         {{ item.schoolName }}
                       </a-select-option>
                     </a-select>
@@ -42,8 +56,9 @@
               </a-col>
               <a-col>
                 <a-form-item label="角色">
-                  <a-radio-group name="role"
-                                 v-decorator="[
+                  <a-radio-group
+                    name="role"
+                    v-decorator="[
                       'role',
                       {
                         rules: [
@@ -53,7 +68,8 @@
                         ],
                         initialValue: 1
                       }
-                    ]">
+                    ]"
+                  >
                     <a-radio :value="1">家长</a-radio>
                     <a-radio :value="2">老师</a-radio>
                     <a-radio :value="3">管理员</a-radio>
@@ -62,17 +78,21 @@
               </a-col>
               <a-col>
                 <a-form-item label="账户">
-                  <a-input @change="onAccountChange"
-                           oninput="value=value.replace(/[^\d]/g,'')"
-                           v-decorator="['account', { initialValue: '' }]" />
+                  <a-input
+                    @change="onAccountChange"
+                    oninput="value=value.replace(/[^\d]/g,'')"
+                    v-decorator="['account', { initialValue: '' }]"
+                  />
                 </a-form-item>
               </a-col>
               <a-col style="flex-grow:1">
                 <a-form-item>
-                  <a-button type="primary"
-                            html-type="submit"
-                            :loading="searchForm.isLoading"
-                            :disabled="searchForm.isLoading">
+                  <a-button
+                    type="primary"
+                    html-type="submit"
+                    :loading="searchForm.isLoading"
+                    :disabled="searchForm.isLoading"
+                  >
                     查询
                   </a-button>
                 </a-form-item>
@@ -80,15 +100,18 @@
             </a-row>
           </a-form>
           <!-- `table -->
-          <a-table class="table"
-                   :pagination="table.pagination"
-                   :columns="table.columns"
-                   :dataSource="table.list"
-                   rowKey="userId"
-                   @change="onPageChange"
-                   bordered
-                   :loading="table.isLoading">
-            <template v-for="col in [
+          <a-table
+            class="table"
+            :pagination="table.pagination"
+            :columns="table.columns"
+            :dataSource="table.list"
+            rowKey="userId"
+            @change="onPageChange"
+            bordered
+            :loading="table.isLoading"
+          >
+            <template
+              v-for="col in [
                 'id',
                 'schoolCode',
                 'billName',
@@ -97,8 +120,9 @@
                 'createTime',
                 'updateTime'
               ]"
-                      :slot="col"
-                      slot-scope="text, record">
+              :slot="col"
+              slot-scope="text, record"
+            >
               <div :key="col">
                 <template v-if="col === 'role'">
                   <template v-if="record.role === 1">
@@ -114,8 +138,10 @@
                 <template v-else>{{ text }}</template>
               </div>
             </template>
-            <template slot="operation"
-                      slot-scope="text, record">
+            <template
+              slot="operation"
+              slot-scope="text, record"
+            >
               <div class="editable-row-operations">
                 <span>
                   <a @click="() => onEdit(record.userId)">修改</a>
@@ -130,32 +156,42 @@
       </keep-alive>
     </transition>
     <!-- `editForm -->
-    <a-modal class="change-modal"
-             :visible="editForm.isVisible"
-             title="修改用户信息"
-             okText="确定"
-             cancelText="取消"
-             @cancel="cancelEdit"
-             @ok="saveEdit"
-             :okButtonProps="{ props: { loading: editForm.isLoading } }">
-      <a-form layout="vertical"
-              :form="editForm.form">
+    <a-modal
+      class="change-modal"
+      :visible="editForm.isVisible"
+      title="修改用户信息"
+      okText="确定"
+      cancelText="取消"
+      @cancel="cancelEdit"
+      @ok="saveEdit"
+      :okButtonProps="{ props: { loading: editForm.isLoading } }"
+    >
+      <a-form
+        layout="vertical"
+        :form="editForm.form"
+      >
         <a-col>
-          <a-form-item :wrapperCol="{span:12}"
-                       label="学校">
-            <a-select v-decorator="[
+          <a-form-item
+            :wrapperCol="{span:12}"
+            label="学校"
+          >
+            <a-select
+              v-decorator="[
                         'orgno',
                         {
                           initialValue: searchForm.schoolCode,
                           rules: [{ required: true }]
                         }
                       ]"
-                      placeholder="请选择学校"
-                      showArrow>
-              <a-select-option v-for="(item, index) in searchForm.schoolList"
-                               :key="index"
-                               :title="item.schoolName"
-                               :value="item.schoolCode">
+              placeholder="请选择学校"
+              showArrow
+            >
+              <a-select-option
+                v-for="(item, index) in searchForm.schoolList"
+                :key="index"
+                :title="item.schoolName"
+                :value="item.schoolCode"
+              >
                 {{ item.schoolName }}
               </a-select-option>
             </a-select>
@@ -163,8 +199,9 @@
         </a-col>
         <a-col>
           <a-form-item label="角色">
-            <a-radio-group name="role"
-                           v-decorator="[
+            <a-radio-group
+              name="role"
+              v-decorator="[
                       'role',
                       {
                         rules: [
@@ -174,7 +211,8 @@
                         ],
                         initialValue: editForm.data.role
                       }
-                    ]">
+                    ]"
+            >
               <a-radio :value="1">家长</a-radio>
               <a-radio :value="2">老师</a-radio>
               <a-radio :value="3">管理员</a-radio>
@@ -182,33 +220,43 @@
           </a-form-item>
         </a-col>
         <a-col>
-          <a-form-item label="手机号码"
-                       :wrapperCol="{span:12}">
-            <a-input oninput="value=value.replace(/[^\d]/g,'')"
-                     v-decorator="['phone', {
+          <a-form-item
+            label="手机号码"
+            :wrapperCol="{span:12}"
+          >
+            <a-input
+              oninput="value=value.replace(/[^\d]/g,'')"
+              v-decorator="['phone', {
                         rules: [
                           {
                             required: true,
                             message: '请输入手机号码'
                           },
-                        ], initialValue: editForm.data.phone }]" />
+                        ], initialValue: editForm.data.phone }]"
+            />
           </a-form-item>
         </a-col>
       </a-form>
     </a-modal>
     <!-- `bindForm -->
-    <a-modal :visible="bindForm.isVisible"
-             title="修改班级信息"
-             okText="确定"
-             cancelText="取消"
-             @cancel="bindForm.isVisible = false"
-             @ok="saveBind"
-             :okButtonProps="{ props: { loading: bindForm.isLoading } }">
-      <a-card hoverable
-              style="width: 100%">
+    <a-modal
+      :visible="bindForm.isVisible"
+      title="修改班级信息"
+      okText="确定"
+      cancelText="取消"
+      @cancel="bindForm.isVisible = false"
+      @ok="saveBind"
+      :okButtonProps="{ props: { loading: bindForm.isLoading } }"
+    >
+      <a-card
+        hoverable
+        style="width: 100%"
+      >
         <a-card-meta :title="bindForm.data.nickName || '###'">
-          <a-avatar slot="avatar"
-                    :src="bindForm.data.headPic" />
+          <a-avatar
+            slot="avatar"
+            :src="bindForm.data.headPic"
+          />
           <template slot="description">
             <h4><span style="font-weight:800;margin-right:8px;">学校名称:</span> {{bindForm.data.orgName || "#####"}}</h4>
             <h4><span style="font-weight:800;margin-right:8px;">手机号码:</span> {{bindForm.data.phone|| "################"}}</h4>
@@ -216,16 +264,24 @@
           </template>
         </a-card-meta>
       </a-card>
-      <a-form layout="vertical"
-              style="margin-top:20px;"
-              :form="bindForm.form">
-        <a-form-item label="班级:"
-                     style="width: 100%">
-          <a-checkbox-group v-decorator="['clazz',{initialValue: bindForm.clazzList}]"
-                            class="overlay">
-            <a-checkbox :value="item.depart_name"
-                        v-for="(item, index) in bindForm.departmentList"
-                        :key="index">
+      <a-form
+        layout="vertical"
+        style="margin-top:20px;"
+        :form="bindForm.form"
+      >
+        <a-form-item
+          label="班级:"
+          style="width: 100%"
+        >
+          <a-checkbox-group
+            v-decorator="['clazz',{initialValue: bindForm.clazzList}]"
+            class="overlay"
+          >
+            <a-checkbox
+              :value="item.depart_name"
+              v-for="(item, index) in bindForm.departmentList"
+              :key="index"
+            >
               {{item.depart_name}}
             </a-checkbox>
           </a-checkbox-group>
@@ -245,6 +301,44 @@ function difference(a, b) {
     return false
   }
   return a.filter(function (v) { return b.indexOf(v) === -1 })
+}
+const Cache = function (config) {
+  if (!config) { config = {} }
+  if (Object.prototype.toString.call(config) !== "[object Object]") {
+    throw new Error('config要传object啊! 弱鸡!')
+  }
+  let list = []
+  const setting = {
+    max: config.max || 30
+  }
+  const set = function (arr) {
+    if (list.length >= setting.max) {
+      list = [...list.splice(1 - setting.max), arr]
+    } else {
+      list = [...list, arr]
+    }
+  }
+  const get = function (data) {
+    const res = list.filter(item => {
+      const dataEntries = Object.entries(data)
+      return dataEntries.every(i => {
+        return item.data[i[0]] === i[1]
+      })
+    })
+    if (res.length > 0) {
+      return res[0]
+    } else {
+      return false
+    }
+  }
+  const clear = function () {
+    list = []
+  }
+  return {
+    set,
+    get,
+    clear
+  }
 }
 
 export default {
@@ -306,6 +400,7 @@ export default {
         // 用户列表
         list: [],
         cacheList: [],
+        cache: new Cache({ max: 30 }),
         pagination: {
           total: 0,
           current: 1,
@@ -439,72 +534,15 @@ export default {
     },
     // api
     async updateClazzList() {
-      const beforeList = this.bindForm.clazzList
-      let afterList = []
-      this.bindForm.form.validateFields((err, value) => {
-        afterList = value.clazz
-      })
-      // 计算删除的班级
-      const deleteList = difference(beforeList, afterList)
-      // 计算新增的班级
-      const addList = difference(afterList, beforeList)
-      await this.$api.addClassRelationV3({
-        userId: this.bindForm.data.userId,
-        classList: addList
-      }).then(res => {
-        // 成功访问, 处理数据
-      });
-      await this.$api.deleteClassRelationV2({
-        userId: this.bindForm.data.userId,
-        classList: deleteList
-      }).then(res => {
-        // 成功访问, 处理数据
-        if (res.code === 1) {
-          this.$message.success("修改成功");
-          this.bindForm.isVisible = false;
-          this.table.cacheList = []
-          this.getUsers()
-        }
-      });
+      this.$info({ title: '这里更新班级' })
     },
     // api
     async updateUserInfo() {
-      this.editForm.isLoading = true;
-      // 接口参数
-      let data;
-      let err;
-      let isSuccess
-      // 表单数据添加到参数中
-      this.editForm.form.validateFields((error, values) => {
-        err = error;
-        data = {
-          userId: this.editForm.data.userId,
-          phone: values.phone,
-          role: values.role,
-          orgno: values.orgno
-        };
-      });
-      // 表单校验
-      if (err) {
-        this.editForm.isLoading = false;
-      } else {
-        // 请求接口
-        await this.$api.updateUserInfo(data).then(res => {
-          // 成功访问, 处理数据
-          if (res.code === 1) {
-            this.$message.success("修改成功");
-            isSuccess = true
-          }
-        });
-        // 成功访问, 处理数据
-        this.editForm.data = {};
-        this.editForm.isLoading = false;
-        this.editForm.isVisible = false;
-      }
-      return isSuccess
+      this.$info({ title: '这里更新用户' })
     },
     // api
     async getUsers() {
+      const { cache } = this.table
       this.table.isLoading = true;
       // 加载前清空相关数据
       this.table.list = [];
@@ -523,43 +561,39 @@ export default {
       // 表单校验成功则继续
       if (!err) {
         // 检索缓存, 如果存在目标页面数据, 则不调用api,而使用缓存数据
-        const cacheFilters = this.table.cacheList.filter(item => {
-          return item.pageNum === data.pageNum
-            && item.role === data.role
-            && item.orgno === data.orgno
-        })
-        if (cacheFilters.length > 0) {
-          this.table.list = cacheFilters[0].list
-          this.table.pagination.total = cacheFilters[0].total
+        let res = cache.get(data)
+        if (res) {
+          this.table.list = res.cache.list
+          this.table.pagination.total = res.cache.total
         } else {
           // 用于缓存已载入数据
-          let cache = {
-            pageNum: data.pageNum,
-            role: data.role,
-            orgno: data.orgno
+          let cacheItem = {
+            data,
+            cache: {
+            }
           }
           // fetch api
-          await this.$api.getUsers(data).then(res => {
-            // 成功访问, 处理数据
-            if (res.code === 1 && res.data) {
-              isSuccess = true
-              let list = res ?.data ?.pageData || []
-              // 去除chirldren(会渲染出多层表格), 添加key( 解决table组件渲染无key报错)
-              list.forEach((item, index) => {
-                item.children && delete item.children;
-                item.key = index
-              });
-              this.table.list = list;
-              this.table.pagination.total = res ?.data ?.dataTotal || 1
-              // 已载入数据进行缓存
-              cache.list = list
-              cache.total = res ?.data ?.dataTotal || 1
-              this.table.cacheList.push(cache)
-            }
-          });
+          await this.$api
+            .getUsers({
+              data,
+              onSuccess: res => {
+                isSuccess = true
+                let list = res ?.data ?.pageData || []
+                // 去除chirldren(会渲染出多层表格), 添加key( 解决table组件渲染无key报错)
+                list.forEach((item, index) => {
+                  item.children && delete item.children;
+                  item.key = index
+                });
+                this.table.list = list;
+                this.table.pagination.total = res ?.data ?.dataTotal || 1
+                // 已载入数据进行缓存
+                cacheItem.cache.list = list
+                cacheItem.cache.total = res ?.data ?.dataTotal || 1
+                cache.set(cacheItem)
+              }
+            })
         }
       }
-
       this.table.isLoading = false;
       return isSuccess
     },
@@ -569,31 +603,34 @@ export default {
       // 加载前清空相关数据
       this.table.list = [];
       let data = { account: this.searchForm.account };
-      await this.$api.findUser(data).then(res => {
-        // 成功访问, 处理数据
-        if (res.code === 1) {
-          let result = res ?.data || null
-          result ?.children && delete result.children
-          result && this.table.list.push(result)
-          this.searchForm.schoolCode = result.orgno
-          // this.searchForm.form.setFieldsValue({ schoolCode: this.searchForm.schoolCode })
-          this.searchForm.form.resetFields(['schoolCode'])
-          this.table.pagination.total = 1
-        }
-      });
-      this.table.isLoading = false;
+      await this.$api
+        .findUser({
+          data,
+          onSuccess: res => {
+            let result = res ?.data || {}
+            if (Object.keys(result).length > 0) {
+              result ?.children && delete result.children
+              result && this.table.list.push(result)
+              this.searchForm.schoolCode = result.orgno
+              // this.searchForm.form.setFieldsValue({ schoolCode: this.searchForm.schoolCode })
+              this.searchForm.form.resetFields(['schoolCode'])
+            }
+            this.table.pagination.total = 1
+          },
+          onFinally: res => this.table.isLoading = false
+        })
     },
     // api
     async findSchoolList() {
       this.searchForm.isSchoolLoading = true
-      await this.$api.findSchoolList().then(res => {
-        // 成功访问, 处理数据
-        if (res.code === 1 && res.data) {
-          this.searchForm.schoolList = res.data;
-          this.searchForm.schoolCode = res ?.data[0] ?.schoolCode || ""
-        }
-      });
-      this.searchForm.isSchoolLoading = false
+      await this.$api
+        .findSchoolList({
+          onSuccess: res => {
+            this.searchForm.schoolList = res.data;
+            this.searchForm.schoolCode = res ?.data[0] ?.schoolCode || ""
+          },
+          onFinally: res => this.searchForm.isSchoolLoading = false
+        })
     },
     // api
     async getTeacherClazzList() {
@@ -601,14 +638,15 @@ export default {
       const data = {
         userId: this.bindForm.data.userId
       }
-      await this.$api.getTeacherClazzList(data).then(res => {
-        // 成功访问, 处理数据
-        if (res.code === 1 && res.data) {
-          this.bindForm.clazzList = res.data
-          this.bindForm.form.resetFields(['clazz'])
-        }
-      });
-      this.bindForm.isSchoolLoading = false
+      await this.$api
+        .getTeacherClazzList({
+          data,
+          onSuccess: res => {
+            this.bindForm.clazzList = res.data
+            this.bindForm.form.resetFields(['clazz'])
+          },
+          onFinally: res => this.bindForm.isSchoolLoading = false
+        })
     },
     // api
     async getSchoolDeparts() {
@@ -617,22 +655,25 @@ export default {
         data.schoolCode = values.schoolCode;
       })
       await this.$api
-        .getSchoolDeparts(data)
-        .then(res => {
-          // 成功访问, 处理数据
-          if (res.code === 1 && res.data) {
+        .getSchoolDeparts({
+          data,
+          onSuccess: res => {
             this.bindForm.departmentList = res.data;
+          },
+          onFinally: res => {
+            this.bindForm.form.setFieldsValue({ depart_name: "全部" })
           }
-        });
-      this.bindForm.form.setFieldsValue({ depart_name: "全部" })
+        })
     },
     async initData() {
+      // 情况缓存
+      this.table.cache.clear()
       await this.findSchoolList()
       this.getUsers()
       this.getSchoolDeparts()
     }
   },
-  async created() {
+  async activated() {
     this.$npStart()
     await this.initData()
     this.$npDone()

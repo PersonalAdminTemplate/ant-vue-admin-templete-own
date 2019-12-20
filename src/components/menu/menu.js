@@ -109,7 +109,6 @@ export default {
         });
     },
     renderMenuItem: function (h, menu, pIndex, index) {
-      console.log('that', this)
       return h(
         Item, {
           key: menu.path ? menu.path : "item_" + pIndex + "_" + index

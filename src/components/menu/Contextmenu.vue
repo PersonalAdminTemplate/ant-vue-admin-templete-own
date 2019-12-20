@@ -45,7 +45,7 @@ export default {
       };
     }
   },
-  created() {
+  activated() {
     window.addEventListener("mousedown", e => this.closeMenu(e));
     window.addEventListener("contextmenu", e => this.setPosition(e));
   },

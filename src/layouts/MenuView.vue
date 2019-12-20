@@ -51,7 +51,7 @@ export default {
       return this.$store.state.setting.multipage;
     }
   },
-  created() {
+  activated() {
     this.pageList.push(this.$route);
     this.linkList.push(this.$route.fullPath);
     this.activePage = this.$route.fullPath;

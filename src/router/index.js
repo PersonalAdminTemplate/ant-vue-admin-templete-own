@@ -19,11 +19,24 @@ export const constantRouterMap = [{
     redirect: "/home",
     icon: "none",
     children: [{
-      path: "/home",
-      name: "首页",
-      component: () => import("@/views/home/home.vue"),
-      icon: "home"
-    }, ]
+        path: "/home",
+        name: "首页",
+        component: () => import("@/views/home/home.vue"),
+        icon: "home"
+      },
+      {
+        path: "/userManager",
+        name: "用户管理",
+        component: () => import("@/views/userManager/userManager.vue"),
+        icon: "userManager"
+      },
+      {
+        path: "/order",
+        name: "订单",
+        component: () => import("@/views/order/order.vue"),
+        icon: "order"
+      },
+    ]
   },
   {
     path: "/exception",
