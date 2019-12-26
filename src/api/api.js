@@ -83,4 +83,9 @@ export const api = {
     url: "/app/product/getBillProductsByOrg",
     method: "POST"
   }),
+  test: config => fetch({
+    ...config,
+    baseUrl: "http://192.168.0.162:9696/base/user/getUsers",
+    method: "get"
+  }),
 };

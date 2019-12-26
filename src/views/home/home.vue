@@ -1,36 +1,46 @@
 <template>
   <page-layout id="home-page">
-    <div slot="extra"
-         class="extraImg">
+    <div
+      slot="extra"
+      class="extraImg"
+    >
       <img :src="setting.extraImage" />
     </div>
     <transition name="page-toggle">
       <keep-alive>
         <a-card class="content">
           <!-- `searchForm -->
-          <a-form :form="searchForm.form"
-                  layout="inline"
-                  @submit="onSearch">
-            <a-row type="flex"
-                   align="middle">
+          <a-form
+            :form="searchForm.form"
+            layout="inline"
+            @submit="onSearch"
+          >
+            <a-row
+              type="flex"
+              align="middle"
+            >
               <a-col>
                 <a-spin :spinning="searchForm.isSchoolLoading">
                   <a-form-item label="学校">
-                    <a-select v-decorator="[
+                    <a-select
+                      v-decorator="[
                               'school',
                               {
                                 initialValue: searchForm.schoolCode,
                                 rules: [{ required: true, message: '请选择学校' }]
                               }
                             ]"
-                              @change="onSchoolChange"
-                              placeholder="请选择学校"
-                              showArrow>
-                      <a-select-option style="width:100px;"
-                                       v-for="(item, index) in searchForm.schoolList"
-                                       :key="index"
-                                       :title="item.schoolName"
-                                       :value="item.schoolCode">
+                      @change="onSchoolChange"
+                      placeholder="请选择学校"
+                      showArrow
+                    >
+                      <a-select-option
+                        style="width:100px;"
+                        v-for="(item, index) in searchForm.schoolList"
+                        :key="index"
+                        :title="item.schoolName"
+                        :value="item.schoolCode"
+                      >
                         {{ item.schoolName }}
                       </a-select-option>
                     </a-select>
@@ -39,30 +49,37 @@
               </a-col>
               <a-col style="flex-grow:1">
                 <a-form-item>
-                  <a-button type="primary"
-                            html-type="submit"
-                            :loading="searchForm.isLoading"
-                            :disabled="searchForm.isLoading">
+                  <a-button
+                    type="primary"
+                    html-type="submit"
+                    :loading="searchForm.isLoading"
+                    :disabled="searchForm.isLoading"
+                  >
                     查询
                   </a-button>
                 </a-form-item>
               </a-col>
               <a-col>
-                <a-button type="primary"
-                          @click="onAdd">
+                <a-button
+                  type="primary"
+                  @click="onAdd"
+                >
                   新增收费项目
                 </a-button>
               </a-col>
             </a-row>
           </a-form>
           <!-- `table -->
-          <a-table class="table"
-                   :columns="table.columns"
-                   :dataSource="table.billList"
-                   rowKey="id"
-                   bordered
-                   :loading="table.isLoading">
-            <template v-for="col in [
+          <a-table
+            class="table"
+            :columns="table.columns"
+            :dataSource="table.billList"
+            rowKey="id"
+            bordered
+            :loading="table.isLoading"
+          >
+            <template
+              v-for="col in [
                 'id',
                 'orgNo',
                 'billName',
@@ -71,8 +88,9 @@
                 'createTime',
                 'updateTime'
               ]"
-                      :slot="col"
-                      slot-scope="text, record">
+              :slot="col"
+              slot-scope="text, record"
+            >
               <div :key="col">
                 <template v-if="col === 'status'">
                   <template v-if="record.status === 0">
@@ -85,8 +103,10 @@
                 <template v-else>{{ text }}</template>
               </div>
             </template>
-            <template slot="operation"
-                      slot-scope="text, record">
+            <template
+              slot="operation"
+              slot-scope="text, record"
+            >
               <div class="editable-row-operations">
                 <span>
                   <a @click="() => onEdit(record.id)">修改</a>
@@ -97,20 +117,25 @@
         </a-card>
       </keep-alive>
     </transition>
-    <a-modal class="change-modal"
-             :visible="editForm.isVisible"
-             title="更新缴费项目"
-             okText="确定"
-             cancelText="取消"
-             @cancel="cancelEdit"
-             @ok="saveEdit"
-             :okButtonProps="{ props: { loading: editForm.isLoading } }">
+    <a-modal
+      class="change-modal"
+      :visible="editForm.isVisible"
+      title="更新缴费项目"
+      okText="确定"
+      cancelText="取消"
+      @cancel="cancelEdit"
+      @ok="saveEdit"
+      :okButtonProps="{ props: { loading: editForm.isLoading } }"
+    >
       <!-- `editForm -->
-      <a-form layout="vertical"
-              :form="editForm.form">
+      <a-form
+        layout="vertical"
+        :form="editForm.form"
+      >
         <a-form-item label="缴费项目名称">
-          <a-input autoFocus
-                   v-decorator="[
+          <a-input
+            autoFocus
+            v-decorator="[
               'billName',
               {
                 rules: [
@@ -121,13 +146,15 @@
                 ],
                 initialValue: editForm.data.billName
               }
-            ]" />
+            ]"
+          />
         </a-form-item>
         <a-form-item label="内容描述">
-          <a-input type="textarea"
-                   rows="5"
-                   style="resize:none;"
-                   v-decorator="[
+          <a-input
+            type="textarea"
+            rows="5"
+            style="resize:none;"
+            v-decorator="[
               'description',
               {
                 rules: [
@@ -138,7 +165,8 @@
                 ],
                 initialValue: editForm.data.description
               }
-            ]" />
+            ]"
+          />
         </a-form-item>
         <a-form-item label="项目状态">
           <a-radio-group v-decorator="[
@@ -158,41 +186,52 @@
         </a-form-item>
       </a-form>
     </a-modal>
-    <a-modal class="add-modal"
-             :visible="addForm.isVisible"
-             title="新增缴费项目"
-             okText="确定"
-             cancelText="取消"
-             @cancel="cancelAdd"
-             @ok="saveAdd"
-             :okButtonProps="{ props: { loading: addForm.isLoading } }">
+    <a-modal
+      class="add-modal"
+      :visible="addForm.isVisible"
+      title="新增缴费项目"
+      okText="确定"
+      cancelText="取消"
+      @cancel="cancelAdd"
+      @ok="saveAdd"
+      :okButtonProps="{ props: { loading: addForm.isLoading } }"
+    >
       <!-- `addForm -->
-      <a-form layout="vertical"
-              :form="addForm.form">
-        <a-form-item label="学校"
-                     v-if="searchForm.schoolList.length > 0">
-          <a-select v-decorator="[
+      <a-form
+        layout="vertical"
+        :form="addForm.form"
+      >
+        <a-form-item
+          label="学校"
+          v-if="searchForm.schoolList.length > 0"
+        >
+          <a-select
+            v-decorator="[
                       'schoolCode',
                       {
                         initialValue: searchForm.schoolCode,
                         rules: [{ required: true, message: '请选择学校' }]
                       }
                     ]"
-                    placeholder="请选择学校"
-                    showArrow>
-            <a-select-option style="width:100px;"
-                             v-for="(item, index) in searchForm.schoolList"
-                             :key="index"
-                             :title="item.schoolName"
-                             :value="item.schoolCode">
+            placeholder="请选择学校"
+            showArrow
+          >
+            <a-select-option
+              style="width:100px;"
+              v-for="(item, index) in searchForm.schoolList"
+              :key="index"
+              :title="item.schoolName"
+              :value="item.schoolCode"
+            >
               {{ item.schoolName }}
             </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item label="缴费项目名称">
-          <a-input autoFocus
-                   oninput="value=value.substr(0,20)"
-                   v-decorator="[
+          <a-input
+            autoFocus
+            oninput="value=value.substr(0,20)"
+            v-decorator="[
               'billName',
               {
                 rules: [
@@ -202,13 +241,15 @@
                   }
                 ]
               }
-            ]" />
+            ]"
+          />
         </a-form-item>
         <a-form-item label="内容描述">
-          <a-input type="textarea"
-                   rows="5"
-                   style="resize:none;"
-                   v-decorator="[
+          <a-input
+            type="textarea"
+            rows="5"
+            style="resize:none;"
+            v-decorator="[
               'description',
               {
                 rules: [
@@ -218,11 +259,13 @@
                   }
                 ]
               }
-            ]" />
+            ]"
+          />
         </a-form-item>
         <a-form-item label="缴费条目">
-          <a-checkbox-group style="display:flex;flex-wrap:wrap;"
-                            v-decorator="[
+          <a-checkbox-group
+            style="display:flex;flex-wrap:wrap;"
+            v-decorator="[
               'productIds',
               {
                 rules: [
@@ -232,11 +275,14 @@
                   }
                 ]
               }
-            ]">
-            <a-checkbox v-for="item in addForm.billProductsList"
-                        :value="item.id"
-                        :key="item.id"
-                        style="flex-grow:1;margin-left:0;">
+            ]"
+          >
+            <a-checkbox
+              v-for="item in addForm.billProductsList"
+              :value="item.id"
+              :key="item.id"
+              style="flex-grow:1;margin-left:0;"
+            >
               {{ item.productName }}
             </a-checkbox>
           </a-checkbox-group>

@@ -36,6 +36,12 @@ export const constantRouterMap = [{
         component: () => import("@/views/order/order.vue"),
         icon: "order"
       },
+      {
+        path: "/dev",
+        name: "dev",
+        component: () => import("@/views/dev/dev.vue"),
+        icon: "dev"
+      },
     ]
   },
   {

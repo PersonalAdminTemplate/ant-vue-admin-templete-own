@@ -77,10 +77,14 @@ export default async ({
   if (method == "GET") {
     let dataStr = "";
     // 将data参数用?&拼接
-    Object.keys(data).forEach(key => {
-      dataStr += key + "=" + data[key] + "&";
-    });
-
+    dataStr = Object.entries(data).reduce((dataStr, value) => {
+      console.log('dataStr3', dataStr)
+      console.log('data2', data)
+      console.log('value', value)
+      dataStr = dataStr + `${value[0]}=${value[1]}&`
+      return dataStr
+      console.log('dataStr2', dataStr)
+    }, dataStr)
     if (dataStr !== "") {
       dataStr = dataStr.substr(0, dataStr.lastIndexOf("&"));
       url = url + "?" + dataStr;
@@ -101,6 +105,7 @@ export default async ({
     onDownloadProgress,
     maxContentLength,
     cancelToken,
+    validateStatus
   }
   // 发送请求
   await axios(requestConfig).then(res => {
